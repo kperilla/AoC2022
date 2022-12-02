@@ -6,9 +6,11 @@ use std::env;
 use phf::phf_map;
 
 mod day1;
+mod day2;
 
 static DAY_FUNCTIONS: phf::Map<&'static str, &'static [fn()]> = phf_map! {
     "1" => &[day1::day1::part1, day1::day1::part2],
+    "2" => &[day2::day2::part1, day2::day2::part2],
 };
 
 // #[tokio::main]
