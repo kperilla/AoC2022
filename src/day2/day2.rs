@@ -1,14 +1,32 @@
 use std::{fs, vec};
-use phf::phf_map;
 
 const INPUT_PATH: &str = "src/day2/input";
 
-#[derive(PartialEq, Eq, Clone, PartialOrd)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, PartialOrd)]
 pub enum RpsMove {
     Rock,
     Paper,
     Scissors,
     Invalid,
+}
+
+impl RpsMove {
+    fn weak_against(&self) -> RpsMove {
+        match self {
+            RpsMove::Rock => RpsMove::Paper,
+            RpsMove::Paper => RpsMove::Scissors,
+            RpsMove::Scissors => RpsMove::Rock,
+            RpsMove::Invalid => RpsMove::Invalid,
+        }
+    }
+    fn strong_against(&self) -> RpsMove {
+        match self {
+            RpsMove::Rock => RpsMove::Scissors,
+            RpsMove::Paper => RpsMove::Rock,
+            RpsMove::Scissors => RpsMove::Paper,
+            RpsMove::Invalid => RpsMove::Invalid,
+        }
+    }
 }
 
 #[derive(Clone)]
@@ -18,8 +36,6 @@ pub enum RpsResult {
     Lose,
 }
 
-
-
 pub struct RpsRound {
     their_move: RpsMove,
     your_move: RpsMove,
@@ -28,24 +44,6 @@ pub struct RpsRound {
 }
 
 impl RpsRound {
-    pub fn new(their_letter: &str, your_letter: &str) -> Self {
-        let their_move = match their_letter {
-            "A" => RpsMove::Rock,
-            "B" => RpsMove::Paper,
-            "C" => RpsMove::Scissors,
-            _ => RpsMove::Invalid,
-        };
-        let your_move = match your_letter {
-            "X" => RpsMove::Rock,
-            "Y" => RpsMove::Paper,
-            "Z" => RpsMove::Scissors,
-            _ => RpsMove::Invalid,
-        };
-        return Self{their_move, your_move, their_score: 0, your_score: 0};
-    }
-
-
-
     fn move_to_score(&self, played_move: &RpsMove) -> u32 {
         match played_move {
             RpsMove::Rock => 1,
@@ -86,12 +84,51 @@ impl RpsRound {
     }
 }
 
-pub fn round_from_line_string(line: &str) -> RpsRound {
+fn parse_their_move(their_letter: &str) -> RpsMove {
+    match their_letter {
+        "A" => RpsMove::Rock,
+        "B" => RpsMove::Paper,
+        "C" => RpsMove::Scissors,
+        _ => RpsMove::Invalid,
+    }
+}
+
+fn parse_your_move_part_1(your_letter: &str) -> RpsMove {
+    match your_letter {
+        "X" => RpsMove::Rock,
+        "Y" => RpsMove::Paper,
+        "Z" => RpsMove::Scissors,
+        _ => RpsMove::Invalid,
+    }
+}
+
+fn parse_your_move_part_2(your_letter: &str, their_move: &RpsMove) -> RpsMove {
+    match your_letter {
+        "X" => their_move.strong_against(),
+        "Y" => their_move.clone(),
+        "Z" => their_move.weak_against(),
+        _ => RpsMove::Invalid,
+    }
+}
+
+fn round_from_line_string_part_1(line: &str) -> RpsRound {
     let move_strs: Vec<String> = line.split_whitespace().map(|s| s.to_string()).collect();
     if move_strs.len() != 2 {
         println!("Something went wrong there should be 2 strs");
     }
-    return RpsRound::new(move_strs.first().unwrap(), move_strs.last().unwrap());
+    let their_move = parse_their_move(move_strs.first().unwrap().as_str());
+    let your_move = parse_your_move_part_1(move_strs.last().unwrap().as_str());
+    return RpsRound{their_move, your_move, their_score: 0, your_score: 0};
+}
+
+fn round_from_line_string_part_2(line: &str) -> RpsRound {
+    let move_strs: Vec<String> = line.split_whitespace().map(|s| s.to_string()).collect();
+    if move_strs.len() != 2 {
+        println!("Something went wrong there should be 2 strs");
+    }
+    let their_move = parse_their_move(move_strs.first().unwrap().as_str());
+    let your_move = parse_your_move_part_2(move_strs.last().unwrap().as_str(), &their_move);
+    return RpsRound{their_move, your_move, their_score: 0, your_score: 0};
 }
 
 pub fn part1() {
@@ -101,7 +138,7 @@ pub fn part1() {
     let split_input = input.trim().split("\n");
     let mut your_total_score: u32 = 0;
     for line in split_input {
-        let mut round = round_from_line_string(line);
+        let mut round = round_from_line_string_part_1(line);
         your_total_score += round.score_round();
     }
     println!("Total score: {}", your_total_score);
@@ -109,4 +146,13 @@ pub fn part1() {
 
 pub fn part2(){
     println!("Part 2");
+    let input = fs::read_to_string(INPUT_PATH)
+        .expect("Should have been able to read the file");
+    let split_input = input.trim().split("\n");
+    let mut your_total_score: u32 = 0;
+    for line in split_input {
+        let mut round = round_from_line_string_part_2(line);
+        your_total_score += round.score_round();
+    }
+    println!("Total score: {}", your_total_score);
 }
