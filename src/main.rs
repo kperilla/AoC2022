@@ -11,6 +11,7 @@ static DAY_FUNCTIONS: phf::Map<&'static str, &'static [fn()]> = phf_map! {
     "1" => &[day1::day1::part1, day1::day1::part2],
 };
 
+// #[tokio::main]
 fn main() {
     let args: Vec<String> = env::args().collect();
     // dbg!(args);
