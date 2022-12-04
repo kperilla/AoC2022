@@ -22,10 +22,7 @@ impl ElfRange {
     }
 
     pub fn collides(&self, other: &ElfRange) -> bool {
-        (self.start <= other.end && self.start >= other.start)
-        || (self.end >= other.start && self.end <= other.end)
-        || (other.start <= self.end && other.start >= self.start)
-        || (other.end >= self.start && other.end <= self.end)
+        (self.start <= other.start && other.start <= self.end) || (other.start <= self.start && self.start <= other.end)
     }
 }
 
@@ -54,12 +51,10 @@ pub fn part2(){
     let split_input = input.trim().split("\n");
     let mut colliding_pairs: u32 = 0;
     for line in split_input {
-        println!("{}", line);
         let elf_parts = line.split(",").collect::<Vec<&str>>();
         let range_1 = ElfRange::new(elf_parts[0]);
         let range_2 = ElfRange::new(elf_parts[1]);
         if range_1.collides(&range_2) {
-            println!("COLLIDES!");
             colliding_pairs += 1;
         }
     }
