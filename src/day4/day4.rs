@@ -26,6 +26,8 @@ impl ElfRange {
     }
 }
 
+// You can also use scanfmt!
+// Also str.lines()
 pub fn part1() {
     println!("Part 1");
     let input = fs::read_to_string(INPUT_PATH)
