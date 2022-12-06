@@ -28,10 +28,10 @@ impl ElfRange {
 
 // You can also use scanfmt!
 // Also str.lines()
-pub fn part1() {
+pub fn part1(input: String) {
     println!("Part 1");
-    let input = fs::read_to_string(INPUT_PATH)
-        .expect("Should have been able to read the file");
+    // let input = fs::read_to_string(INPUT_PATH)
+    //     .expect("Should have been able to read the file");
     let split_input = input.trim().split("\n");
     let mut containing_pairs: u32 = 0;
     for line in split_input {
@@ -46,10 +46,10 @@ pub fn part1() {
     println!("Total containing pairs: {}", containing_pairs);
 }
 
-pub fn part2(){
+pub fn part2(input: String){
     println!("Part 2");
-    let input = fs::read_to_string(INPUT_PATH)
-        .expect("Should have been able to read the file");
+    // let input = fs::read_to_string(INPUT_PATH)
+    //     .expect("Should have been able to read the file");
     let split_input = input.trim().split("\n");
     let mut colliding_pairs: u32 = 0;
     for line in split_input {

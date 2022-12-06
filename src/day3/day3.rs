@@ -4,10 +4,10 @@ use std::collections::HashSet;
 const INPUT_PATH: &str = "src/day3/input";
 const ALPHA: &str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-pub fn part1() {
+pub fn part1(input: String) {
     println!("Part 1");
-    let input = fs::read_to_string(INPUT_PATH)
-        .expect("Should have been able to read the file");
+    // let input = fs::read_to_string(INPUT_PATH)
+    //     .expect("Should have been able to read the file");
     let split_input = input.trim().split("\n");
     let mut total_priority: u32 = 0;
     for row in split_input {
@@ -32,10 +32,10 @@ pub fn part1() {
 
 }
 
-pub fn part2(){
+pub fn part2(input: String){
     println!("Part 2");
-    let input = fs::read_to_string(INPUT_PATH)
-        .expect("Should have been able to read the file");
+    // let input = fs::read_to_string(INPUT_PATH)
+    //     .expect("Should have been able to read the file");
     let split_input: Vec<&str> = input.trim().split("\n").collect();
     let mut total_priority: u32 = 0;
     let mut ix = 0;

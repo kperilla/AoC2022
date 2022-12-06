@@ -131,10 +131,10 @@ fn round_from_line_string_part_2(line: &str) -> RpsRound {
     return RpsRound{their_move, your_move, their_score: 0, your_score: 0};
 }
 
-pub fn part1() {
+pub fn part1(input: String) {
     println!("Part 1");
-    let input = fs::read_to_string(INPUT_PATH)
-        .expect("Should have been able to read the file");
+    // let input = fs::read_to_string(INPUT_PATH)
+    //     .expect("Should have been able to read the file");
     let split_input = input.trim().split("\n");
     let mut your_total_score: u32 = 0;
     for line in split_input {
@@ -144,10 +144,10 @@ pub fn part1() {
     println!("Total score: {}", your_total_score);
 }
 
-pub fn part2(){
+pub fn part2(input: String){
     println!("Part 2");
-    let input = fs::read_to_string(INPUT_PATH)
-        .expect("Should have been able to read the file");
+    // let input = fs::read_to_string(INPUT_PATH)
+    //     .expect("Should have been able to read the file");
     let split_input = input.trim().split("\n");
     let mut your_total_score: u32 = 0;
     for line in split_input {
