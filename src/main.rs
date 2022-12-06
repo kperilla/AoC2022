@@ -1,4 +1,5 @@
 #![allow(unused)]
+#[macro_use] extern crate scan_fmt;
 
 use std::io;
 use rand::Rng;
@@ -9,12 +10,14 @@ mod day1;
 mod day2;
 mod day3;
 mod day4;
+mod day5;
 
 static DAY_FUNCTIONS: phf::Map<&'static str, &'static [fn()]> = phf_map! {
     "1" => &[day1::day1::part1, day1::day1::part2],
     "2" => &[day2::day2::part1, day2::day2::part2],
     "3" => &[day3::day3::part1, day3::day3::part2],
     "4" => &[day4::day4::part1, day4::day4::part2],
+    "5" => &[day5::day5::part1, day5::day5::part2],
 };
 
 // #[tokio::main]
