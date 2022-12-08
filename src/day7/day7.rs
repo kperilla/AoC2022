@@ -1,3 +1,4 @@
+// Massive credits to https://sachanganesh.com/programming/graph-tree-traversals-in-rust/
 use std::fs::File;
 use std::{fs, vec, str, marker};
 use std::ops::{Index, IndexMut, Deref};
