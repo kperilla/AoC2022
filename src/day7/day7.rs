@@ -1,10 +1,5 @@
 // Massive credits to https://sachanganesh.com/programming/graph-tree-traversals-in-rust/
-use std::fs::File;
-use std::{fs, vec, str, marker};
-use std::ops::{Index, IndexMut, Deref};
-use regex::Regex;
-use reqwest::blocking::get;
-use std::collections::HashMap;
+use std::{vec, str};
 
 #[derive(Debug, PartialEq)]
 enum EntryType {
@@ -71,7 +66,7 @@ impl PostorderIter {
         }
         return Self{stack: s2};
     }
-    pub fn next(&mut self, fs: &FilesystemTree) -> Option<TreeIndex> {
+    pub fn next(&mut self) -> Option<TreeIndex> {
         self.stack.pop()
     }
 }
@@ -84,19 +79,11 @@ enum CommandType {
 struct Command {
     command_type: CommandType,
     target: Option<String>,
-    response: Option<Vec<String>>,
-}
-
-
-fn populate_tree_sizes_iter(fs: &mut FilesystemTree) -> Vec<(u32, TreeIndex)> {
-    let mut dir_sizes: Vec<(u32, TreeIndex)> = Vec::new();
-
-    return dir_sizes;
 }
 
 fn build_tree_from_input(input: String) -> FilesystemTree {
     let mut lines = input.lines();
-    let mut curr_line = lines.next();
+    let curr_line = lines.next();
     match curr_line {
         Some("$ cd /") => (),
         None => panic!("No start"),
@@ -104,8 +91,8 @@ fn build_tree_from_input(input: String) -> FilesystemTree {
     };
 
     let mut fs = FilesystemTree{arena: Vec::new(), root: None};
-    let mut root_node = EntryNode{name: "/".to_string(), children: Vec::new(), parent: None, size: 0, entry_type: EntryType::Directory};
-    let mut curr_command = Command{command_type: CommandType::Cd, target: Some("/".to_string()), response: None};
+    let root_node = EntryNode{name: "/".to_string(), children: Vec::new(), parent: None, size: 0, entry_type: EntryType::Directory};
+    let mut curr_command = Command{command_type: CommandType::Cd, target: Some("/".to_string())};
     let mut curr_node = fs.register_to_arena(root_node);
     fs.root = Some(curr_node);
     while let Some(line_str) = lines.next() {
@@ -116,7 +103,7 @@ fn build_tree_from_input(input: String) -> FilesystemTree {
                     let command_type = CommandType::Cd;
                     let target_str = command_words[1].to_string();
                     if command_words.len() >= 1 {
-                        curr_command = Command{command_type, target: Some(target_str.clone()), response: None};
+                        curr_command = Command{command_type, target: Some(target_str.clone())};
                     } else {
                         panic!("Cd without args unsupported");
                     }
@@ -145,7 +132,7 @@ fn build_tree_from_input(input: String) -> FilesystemTree {
 
                 },
                 "ls" => {
-                    curr_command = Command{command_type: CommandType::Ls, target: None, response: None};
+                    curr_command = Command{command_type: CommandType::Ls, target: None};
                 },
                 _ => panic!("Unexpected command found"),
             };
@@ -186,7 +173,7 @@ fn build_tree_from_input(input: String) -> FilesystemTree {
 fn scan_dir_sizes(fs: &mut FilesystemTree) -> Vec<(u32, TreeIndex)> {
     let mut dir_sizes: Vec<(u32, TreeIndex)> = Vec::new();
     let mut tree_iter = fs.iter();
-    while let Some(node_ix) = tree_iter.next(&fs) {
+    while let Some(node_ix) = tree_iter.next() {
         let node = fs.node_at(node_ix).unwrap();
         if node.entry_type == EntryType::Directory {
             dir_sizes.push((node.size, node_ix));

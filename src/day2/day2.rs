@@ -1,7 +1,3 @@
-use std::{fs, vec};
-
-const INPUT_PATH: &str = "src/day2/input";
-
 #[derive(Debug, PartialEq, Eq, Copy, Clone, PartialOrd)]
 pub enum RpsMove {
     Rock,
@@ -58,7 +54,6 @@ impl RpsRound {
             RpsResult::Win => 6,
             RpsResult::Draw => 3,
             RpsResult::Lose => 0,
-            _ => 0,
         }
     }
 
@@ -70,9 +65,9 @@ impl RpsRound {
         if self.your_move == self.their_move {
             self.their_score += self.result_to_score(&RpsResult::Draw);
             self.your_score += self.result_to_score(&RpsResult::Draw);
-        } else if (self.your_move == RpsMove::Rock && self.their_move == RpsMove::Scissors ||
-                   self.your_move == RpsMove::Scissors && self.their_move == RpsMove::Paper ||
-                   self.your_move == RpsMove::Paper && self.their_move == RpsMove::Rock)
+        } else if self.your_move == RpsMove::Rock && self.their_move == RpsMove::Scissors ||
+                  self.your_move == RpsMove::Scissors && self.their_move == RpsMove::Paper ||
+                  self.your_move == RpsMove::Paper && self.their_move == RpsMove::Rock
         {
             self.their_score += self.result_to_score(&RpsResult::Lose);
             self.your_score += self.result_to_score(&RpsResult::Win);
@@ -133,8 +128,6 @@ fn round_from_line_string_part_2(line: &str) -> RpsRound {
 
 pub fn part1(input: String) {
     println!("Part 1");
-    // let input = fs::read_to_string(INPUT_PATH)
-    //     .expect("Should have been able to read the file");
     let split_input = input.trim().split("\n");
     let mut your_total_score: u32 = 0;
     for line in split_input {
@@ -146,8 +139,6 @@ pub fn part1(input: String) {
 
 pub fn part2(input: String){
     println!("Part 2");
-    // let input = fs::read_to_string(INPUT_PATH)
-    //     .expect("Should have been able to read the file");
     let split_input = input.trim().split("\n");
     let mut your_total_score: u32 = 0;
     for line in split_input {

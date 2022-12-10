@@ -1,12 +1,5 @@
-use std::{fs, vec};
-
-const INPUT_PATH: &str = "src/day1/input";
-
-
 pub fn part1(input: String) {
     println!("Part 1");
-    // let input = fs::read_to_string(INPUT_PATH)
-    //     .expect("Should have been able to read the file");
     let split_input = input.trim().split("\n\n");
     let list_of_list_of_nums = split_input
         .map(|x| x.split("\n")
@@ -18,8 +11,6 @@ pub fn part1(input: String) {
 
 pub fn part2(input: String) {
     println!("Part 2");
-    // let input = fs::read_to_string(INPUT_PATH)
-    //     .expect("Should have been able to read the file");
     let split_input = input.trim().split("\n\n");
     let list_of_list_of_nums = split_input
         .map(|x| x.split("\n")

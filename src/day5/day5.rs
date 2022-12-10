@@ -1,8 +1,4 @@
-use std::{fs, vec};
-use std::ops::{Index, IndexMut};
 use regex::Regex;
-
-const INPUT_PATH: &str = "src/day5/input";
 
 pub struct MoveInstruction {
     num: u16,
@@ -47,7 +43,7 @@ impl CargoStacks {
         let matches = re.find_iter(num_line);
         let columns = matches.count();
         let mut stack_list: Vec<Vec<char>> = Vec::with_capacity(columns);
-        for col in 0..columns {
+        for _ in 0..columns {
             stack_list.push(Vec::new());
         }
         return stack_list;
@@ -64,7 +60,7 @@ impl CargoStacks {
 
     pub fn execute_instruction_multiple(&mut self, instruction: MoveInstruction) {
         let mut intermediate_stack: Vec<char> = Vec::new();
-        for i in 0..instruction.num {
+        for _ in 0..instruction.num {
             let to_move = self.stack_list[instruction.src as usize - 1].pop().unwrap();
             intermediate_stack.push(to_move);
         }
@@ -110,8 +106,6 @@ impl CargoStacks {
 
 pub fn part1(input: String) {
     println!("Part 1");
-    // let input = fs::read_to_string(INPUT_PATH)
-    //     .expect("Should have been able to read the file");
     let split_input = input.split("\n\n").collect::<Vec<&str>>();
     let init_state_drawing = split_input[0];
     let instructions = split_input[1].lines();
@@ -128,8 +122,6 @@ pub fn part1(input: String) {
 
 pub fn part2(input: String){
     println!("Part 2");
-    // let input = fs::read_to_string(INPUT_PATH)
-    //     .expect("Should have been able to read the file");
     let split_input = input.split("\n\n").collect::<Vec<&str>>();
     let init_state_drawing = split_input[0];
     let instructions = split_input[1].lines();

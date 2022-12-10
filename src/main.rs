@@ -11,6 +11,7 @@ mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day8;
 
 struct DayEntity {
     part_funcs: Vec<fn(String)>,
@@ -30,6 +31,7 @@ impl DayEntity {
             5 => Self{part_funcs: [day5::day5::part1, day5::day5::part2].to_vec(), input_url},
             6 => Self{part_funcs: [day6::day6::part1, day6::day6::part2].to_vec(), input_url},
             7 => Self{part_funcs: [day7::day7::part1, day7::day7::part2].to_vec(), input_url},
+            8 => Self{part_funcs: [day8::day8::part1, day8::day8::part2].to_vec(), input_url},
             _ => todo!(),
         }
     }
