@@ -3,6 +3,7 @@
 
 use std::env;
 use std::fs;
+use std::time::Instant;
 
 mod day1;
 mod day2;
@@ -13,6 +14,7 @@ mod day6;
 mod day7;
 mod day8;
 mod day9;
+mod day10;
 
 struct DayEntity {
     part_funcs: Vec<fn(String)>,
@@ -34,6 +36,7 @@ impl DayEntity {
             7 => Self{part_funcs: [day7::day7::part1, day7::day7::part2].to_vec(), input_url},
             8 => Self{part_funcs: [day8::day8::part1, day8::day8::part2].to_vec(), input_url},
             9 => Self{part_funcs: [day9::day9::part1, day9::day9::part2].to_vec(), input_url},
+            10 => Self{part_funcs: [day10::day10::part1, day10::day10::part2].to_vec(), input_url},
             _ => todo!(),
         }
     }
@@ -73,6 +76,8 @@ async fn main() -> Result<(), reqwest::Error>{
     let func = selected_day.part_funcs[part_index];
 
     let input = get_input_by_http(selected_day.input_url, "session.key".to_string()).await?;
+    let now = Instant::now();
     func(input);
+    println!("Time: {}ms", now.elapsed().as_millis());
     Ok(())
 }
