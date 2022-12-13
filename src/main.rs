@@ -15,6 +15,7 @@ mod day7;
 mod day8;
 mod day9;
 mod day10;
+mod day11;
 
 struct DayEntity {
     part_funcs: Vec<fn(String)>,
@@ -37,6 +38,7 @@ impl DayEntity {
             8 => Self{part_funcs: [day8::day8::part1, day8::day8::part2].to_vec(), input_url},
             9 => Self{part_funcs: [day9::day9::part1, day9::day9::part2].to_vec(), input_url},
             10 => Self{part_funcs: [day10::day10::part1, day10::day10::part2].to_vec(), input_url},
+            11 => Self{part_funcs: [day11::day11::part1, day11::day11::part2].to_vec(), input_url},
             _ => todo!(),
         }
     }
@@ -78,6 +80,6 @@ async fn main() -> Result<(), reqwest::Error>{
     let input = get_input_by_http(selected_day.input_url, "session.key".to_string()).await?;
     let now = Instant::now();
     func(input);
-    println!("Time: {}ms", now.elapsed().as_millis());
+    println!("Time: {} micros", now.elapsed().as_micros());
     Ok(())
 }
