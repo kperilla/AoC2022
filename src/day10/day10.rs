@@ -1,4 +1,3 @@
-use std::fs;
 
 #[derive(Copy, Clone)]
 enum AsmOp {

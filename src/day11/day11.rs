@@ -1,9 +1,6 @@
 // Key lesson: (a % (x * y * z)) % x = a % x AND (a % (x * y * z)) % y = a % y, etc.
 
-use std::fs;
-use std::collections::{HashMap, VecDeque};
-
-
+use std::collections::VecDeque;
 
 fn parse_starting_items(line: String) -> VecDeque<u64> {
     if !line.starts_with("Starting items: ") {
@@ -12,23 +9,6 @@ fn parse_starting_items(line: String) -> VecDeque<u64> {
     }
     let num_str = &line["Starting items: ".len()..];
     let items = num_str.split(", ").map(|x| x.parse::<u64>().unwrap()).collect::<VecDeque<u64>>();
-    return items;
-}
-
-fn parse_starting_items_factors(line: String) -> VecDeque<Item> {
-    if !line.starts_with("Starting items: ") {
-        println!("{}", line);
-        panic!("Bad string");
-    }
-    let num_str = &line["Starting items: ".len()..];
-    let mut items: VecDeque<Item> = VecDeque::new();
-    for item in num_str.split(", ").map(|x| x.parse::<u32>().unwrap()) {
-        let mut factors = Vec::new();
-        factors.push(item);
-        items.push_back(Item{factors, addend: 0});
-    }
-    // .collect::<VecDeque<u32>>();
-
     return items;
 }
 
@@ -85,7 +65,6 @@ fn parse_if_line(line: String) -> usize {
 #[derive(Debug)]
 struct Monkey {
     items: VecDeque<u64>,
-    // items: VecDeque<Item>,
     operation: Operation,
     operation_num: u32,
     div_check: u32,
@@ -121,54 +100,29 @@ impl Monkey {
         self.inspect_times += 1;
         new_val
     }
-    fn give(&mut self, other: &mut VecDeque<u64>) {
-        other.push_back(self.items.pop_front().unwrap());
-    }
 }
 
 pub fn part1(input: String) {
     println!("Part 1");
     // let input = fs::read_to_string("src/day10/testinput")
     //     .expect("Should have been able to read the file");
-    // let mut monkeys = Vec::new();
-    let mut monkeys = input.split("\n\n").map(|x| Monkey::new(x.lines().collect::<Vec<&str>>())).collect::<Vec<Monkey>>();
-    // for monkey in monkeys {
-    //     println!("{:?}", monkey);
-    // }
-    // let mut changes: HashMap<usize, VecDeque<u32>> = HashMap::new();
-
+    let mut monkeys = input
+        .split("\n\n")
+        .map(|x| Monkey::new(x.lines().collect::<Vec<&str>>()))
+        .collect::<Vec<Monkey>>();
     let mut round = 1;
     loop {
         for i in 0..monkeys.len() {
-            // match changes.get_mut(&i) {
-            //     None => {},
-            //     Some(queue) => {
-            //         while queue.len() > 0 {
-            //             monkeys[i].items.push_back(queue.pop_front().unwrap());
-            //         }
-            //     }
-            // }
 
             while monkeys[i].items.len() > 0 {
                 if monkeys[i].inspect_next(true) % (monkeys[i].div_check as u64) == 0 {
                     let dst = monkeys[i].test_dst.0;
                     let item = monkeys[i].items.pop_front().unwrap();
                     monkeys[dst].items.push_back(item);
-                    // if !changes.contains_key(&dst) {
-                    //     changes.insert(dst, VecDeque::new());
-                    // }
-                    // let mut change_queue = changes.get_mut(&dst).unwrap();
-                    // monkeys[i].give(change_queue);
-                    // monkeys[i].give(changes.get_mut(&dst).unwrap());
-                    // changes.insert(dst, *change_queue);
                 } else {
                     let dst = monkeys[i].test_dst.1;
                     let item = monkeys[i].items.pop_front().unwrap();
                     monkeys[dst].items.push_back(item);
-                    // if !changes.contains_key(&dst) {
-                    //     changes.insert(dst, VecDeque::new());
-                    // }
-                    // monkeys[i].give(changes.get_mut(&dst).unwrap());
                 }
             }
         }
@@ -184,15 +138,7 @@ pub fn part1(input: String) {
 }
 
 #[derive(Debug)]
-
-struct Item {
-    factors: Vec<u32>,
-    addend: u32,
-}
-
-#[derive(Debug)]
 struct ModuloMonkey {
-    // items: VecDeque<u64>,
     item_mods: VecDeque<u64>,
     operation: Operation,
     operation_num: u32,
@@ -230,17 +176,6 @@ impl ModuloMonkey {
     // fn give(&mut self, other: &mut VecDeque<u64>) {
     //     other.push_back(self.items.pop_front().unwrap());
     // }
-}
-
-fn factors_divisible(item: Item, divisor: u32) -> bool {
-    let mut divisible = false;
-    for factor in item.factors {
-        if factor % divisor == 0 {
-            divisible = true;
-            break;
-        }
-    }
-    return divisible;
 }
 
 pub fn part2(input: String){
@@ -294,12 +229,6 @@ pub fn part2(input: String){
                 }
             }
         }
-        if round == 20 {
-            println!("ROUND 20");
-            for monkey in &monkeys {
-                println!("{:?}", monkey)
-            }
-        }
         if round == 10000 {
             break;
         }
@@ -307,7 +236,6 @@ pub fn part2(input: String){
     }
     let mut inspect_times = monkeys.iter().map(|monkey| monkey.inspect_times).collect::<Vec<u32>>();
     inspect_times.sort();
-    println!("{:?}", inspect_times);
     let mult: u64 = inspect_times[inspect_times.len() - 1] as u64 * inspect_times[inspect_times.len() - 2] as u64;
     println!("Mult: {}", mult);
 }
