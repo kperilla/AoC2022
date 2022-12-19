@@ -1,6 +1,5 @@
-use std::fs;
+// use std::fs;
 use std::cmp::Ordering;
-
 
 #[derive(Debug)]
 enum OrderState {
@@ -22,7 +21,7 @@ impl PacketPair {
         } else {
             let left = lines[0].to_string();
             let right = lines[1].to_string();
-            Self {left, right}
+            Self { left, right }
         }
     }
     fn is_bracketed(list: &Vec<char>) -> bool {
@@ -35,7 +34,7 @@ impl PacketPair {
             match chars[ix_end] {
                 '[' => depth += 1,
                 ']' => depth -= 1,
-                _ => {},
+                _ => {}
             }
             if depth == 0 {
                 return ix_end;
@@ -146,7 +145,7 @@ impl PacketPair {
                     let mut new_right: Vec<char> = vec![0 as char; match_right - right_ix + 1];
                     new_right.clone_from_slice(&right[right_ix..=match_right]);
                     match PacketPair::is_in_order(&new_left, &new_right) {
-                        OrderState::Indeterminate => {},
+                        OrderState::Indeterminate => {}
                         is_in_order => return is_in_order,
                     }
                     left_ix = match_left + 1;
@@ -165,14 +164,17 @@ impl PacketPair {
                         number_ender += 1;
                     }
                     let new_right: Vec<char> = "[{}]"
-                        .replace("{}", right[right_ix..number_ender]
-                            .iter()
-                            .collect::<String>()
-                            .as_str())
+                        .replace(
+                            "{}",
+                            right[right_ix..number_ender]
+                                .iter()
+                                .collect::<String>()
+                                .as_str(),
+                        )
                         .chars()
                         .collect::<Vec<char>>();
                     match PacketPair::is_in_order(&new_left, &new_right) {
-                        OrderState::Indeterminate => {},
+                        OrderState::Indeterminate => {}
                         is_in_order => return is_in_order,
                     }
                     // println!("Returning from left_start recurse, indeterminate");
@@ -191,15 +193,18 @@ impl PacketPair {
                         number_ender += 1;
                     }
                     let new_left: Vec<char> = "[{}]"
-                        .replace("{}", left[left_ix..number_ender]
-                            .iter()
-                            .collect::<String>()
-                            .as_str())
+                        .replace(
+                            "{}",
+                            left[left_ix..number_ender]
+                                .iter()
+                                .collect::<String>()
+                                .as_str(),
+                        )
                         .chars()
                         .collect::<Vec<char>>();
                     // println!("Right was an array, left was number: {}", new_left.iter().collect::<String>());
                     match PacketPair::is_in_order(&new_left, &new_right) {
-                        OrderState::Indeterminate => {},
+                        OrderState::Indeterminate => {}
                         is_in_order => return is_in_order,
                     }
                     left_ix = number_ender + 1;
@@ -216,7 +221,10 @@ impl PacketPair {
                 }
                 // println!("Trying to parse: {}, {}, {}", left[left_ix..left_ender].iter().collect::<String>(), left_ix, left_ender);
                 let left_num: u32 = left[left_ix..left_ender]
-                    .iter().collect::<String>().parse::<u32>().unwrap();
+                    .iter()
+                    .collect::<String>()
+                    .parse::<u32>()
+                    .unwrap();
                 let mut right_ender = right_ix + 1;
                 while right_ender < right.len() {
                     if [',', ']'].contains(&right[right_ender]) {
@@ -225,13 +233,16 @@ impl PacketPair {
                     right_ender += 1;
                 }
                 let right_num: u32 = right[right_ix..right_ender]
-                    .iter().collect::<String>().parse::<u32>().unwrap();
+                    .iter()
+                    .collect::<String>()
+                    .parse::<u32>()
+                    .unwrap();
 
                 // println!("Comparing {} and {}", left_num, right_num);
                 match left_num.cmp(&right_num) {
                     Ordering::Less => return OrderState::InOrder,
                     Ordering::Greater => return OrderState::OutOfOrder,
-                    Ordering::Equal => {},
+                    Ordering::Equal => {}
                 }
                 left_ix = left_ender;
                 right_ix = right_ender;
@@ -257,7 +268,6 @@ impl PacketPair {
         // println!("{}", right_chars.iter().collect::<String>());
         // println!();
         return PacketPair::is_in_order(&left_chars, &right_chars);
-
     }
 }
 
@@ -275,28 +285,34 @@ pub fn part1(input: String) {
             OrderState::InOrder => {
                 println!("IN ORDER {}", i);
                 ix_sum += i + 1;
-            },
+            }
             OrderState::OutOfOrder => {
                 println!("NOT IN ORDER {}", i);
-            },
+            }
             _ => panic!("Error"),
         }
     }
     println!("Sum: {}", ix_sum);
 }
 
-pub fn part2(input: String){
+pub fn part2(input: String) {
     println!("Part 2");
     // let input = fs::read_to_string("src/day11/testinput")
     //     .expect("Should have been able to read the file");
     let no_spaces = input.replace("\n\n", "\n");
-    let mut signals = no_spaces.lines().map(|x| x.to_string()).collect::<Vec<String>>();
+    let mut signals = no_spaces
+        .lines()
+        .map(|x| x.to_string())
+        .collect::<Vec<String>>();
     let two_sig = "[[2]]".to_string();
     let six_sig = "[[6]]".to_string();
     signals.push(two_sig.clone());
     signals.push(six_sig.clone());
     signals.sort_by(|str_a, str_b| -> Ordering {
-        let pair = PacketPair{left: str_a.clone(), right: str_b.clone()};
+        let pair = PacketPair {
+            left: str_a.clone(),
+            right: str_b.clone(),
+        };
         match pair.solve_pair() {
             OrderState::InOrder => Ordering::Less,
             OrderState::OutOfOrder => Ordering::Greater,
